@@ -69,10 +69,10 @@ row = 1
 # add_sheet is used to create sheet. 
 sheet1 = wb.add_sheet('Sheet1') 
 sheet1.col(0).width = 15*256
-sheet1.col(1).width = 24*256
+sheet1.col(1).width = 30*256
 sheet1.col(2).width = 20*256
 sheet1.col(3).width = 10*256
-sheet1.col(4).width = 17*256
+sheet1.col(4).width = 20*256
 sheet1.col(5).width = 15*256
 sheet1.col(6).width = 15*256
 sheet1.col(7).width = 15*256
@@ -168,7 +168,7 @@ for page in folders:
         transport=""
         to1=""
         oldBook = ""
-        indexReference = text2.find("REFERENCE", startText)
+        indexReference = text2.find("REFERENCE", startText,startText+300)
 
         if indexReference!=-1: #Page2
             indexReferenceNum = text2.find("\n", indexReference+9)
@@ -396,7 +396,7 @@ for page in folders:
             for x in range(len(reference)-3):
                 referenceName += " "+reference[3+x]
 
-            indexAgencyRef = text2.find("TO.Ref.", indexEndLine)
+            indexAgencyRef = text2.find("TO.Ref.", indexEndLine,indexEndLine+100)
             if indexAgencyRef != -1:
                 indexEndLine = text2.find("\n", indexAgencyRef+1)
                 AgencyReference = text2[indexAgencyRef+7:indexEndLine].strip()
@@ -411,19 +411,19 @@ for page in folders:
             indexType = text2.find("---", indexEndLine+1,indexEndLine+100)
             if indexType != -1:
                 indexEndLine = text2.find("\n", indexType+1)
-            typeDetail=""
+                typeDetail=""
 
-            if( "NEW" in text2[indexType+1:indexType+100]):
+            if(( indexType == -1 and typeDetail=="NEW") or "NEW" in text2[indexType+1:indexType+100]):
                 typeDetail="NEW"
 
-                indexArr= text2.find("Arrival:", indexEndLine+1,indexEndLine+100)
+                indexArr= text2.find("Arrival:", indexEndLine+1,indexEndLine+200)
                 indexEndLineArr = text2.find("\n", indexArr+1)
                 if indexArr != -1:
                     arrival = text2[indexArr+len("Arrival:"):indexEndLineArr].strip()
                 else:
                     arrival = ""
 
-                indexDe= text2.find("Departure:", indexEndLine+1,indexEndLine+100)
+                indexDe= text2.find("Departure:", indexEndLine+1,indexEndLine+200)
                 indexEndLineDe = text2.find("\n", indexDe+1)
                 if indexDe != -1:
                     depeart = text2[indexDe+len("Departure:"):indexEndLineDe].strip()
@@ -459,40 +459,53 @@ for page in folders:
                 indexService = text2.find("From:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexService+1)
                 if indexDe != -1:
-                    indexEndLine = text2.find("\n", indexService+1)
-                    indexEndLine = text2.find("\n", indexService+1)
+                    indexEndLineTest = text2.find("\n", indexEndLine+1)
+                    indexEndLine = text2.find("\n", indexEndLineTest+1)
+                    if text2[indexEndLineTest:indexEndLine].isspace():
+                        indexEndLine = indexEndLineTest
                 from1 = text2[indexService+len("From:"):indexEndLine].strip()
 
-                indexService = text2.find("Pickup Time:", indexEndLine+1)
-                indexEndLine = text2.find("hrs", indexService+1)
-                pickuptime = text2[indexService+len("Pickup Time:"):indexEndLine-1].strip()
+                indexService = text2.find("Pickup Time:", indexEndLine+1,indexEndLine+100)
+                if indexService != -1:
+                    indexEndLine = text2.find("hrs", indexService+1)
+                    pickuptime = text2[indexService+len("Pickup Time:"):indexEndLine-1].strip()
+                else:
+                    pickuptime = ""
 
-                indexService = text2.find("Pickup Point:", indexEndLine+1)
-                indexEndLineP = text2.find("\n", indexService+1)
-                pickuppoint = text2[indexService+len("Pickup Point:"):indexEndLineP].strip()
+                indexService = text2.find("Pickup Point:", indexEndLine+1,indexEndLine+100)
+                if indexService != -1:
+                    indexEndLineP = text2.find("\n", indexService+1)
+                    pickuppoint = text2[indexService+len("Pickup Point:"):indexEndLineP].strip()
+                else:
+                    pickuppoint = ""
 
                 indexService = text2.find("Transport:", indexEndLineP+1)
-                indexEndLine = text2.find("\n", indexService+1)
-                transport = text2[indexService+len("Transport:"):indexEndLine].strip()
+                indexEndLine1 = text2.find("\n", indexService+1)
+                transport = text2[indexService+len("Transport:"):indexEndLine1].strip()
 
                 indexService = text2.find("To: ", indexEndLineP+1)
                 indexEndLine = text2.find("\n", indexService+1)
                 if indexArr != -1:
-                    indexEndLine = text2.find("\n", indexService+1)
-                    indexEndLine = text2.find("\n", indexService+1)
+                    indexEndLineTest = text2.find("\n", indexEndLine+1)
+                    indexEndLine = text2.find("\n", indexEndLineTest+1)
+                    if text2[indexEndLineTest:indexEndLine].isspace():
+                        indexEndLine = indexEndLineTest
                 to1 = text2[indexService+len("To: "):indexEndLine].strip()
 
-            elif ("CANCELLATION" in text2[indexType+1:indexType+100]):
+                if indexEndLine1 > indexEndLine:
+                    indexEndLine = indexEndLine1
+
+            elif (( indexType == -1 and typeDetail=="CANCEL") or"CANCELLATION" in text2[indexType+1:indexType+100]):
                 typeDetail="CANCEL"
 
-                indexArr= text2.find("Arrival:", indexEndLine+1,indexEndLine+100)
+                indexArr= text2.find("Arrival:", indexEndLine+1,indexEndLine+200)
                 indexEndLineArr = text2.find("\n", indexArr+1)
                 if indexArr != -1:
                     arrival = text2[indexArr+len("Arrival:"):indexEndLineArr].strip()
                 else:
                     arrival=""
 
-                indexDe= text2.find("Departure:", indexEndLine+1,indexEndLine+100)
+                indexDe= text2.find("Departure:", indexEndLine+1,indexEndLine+200)
                 indexEndLineDe = text2.find("\n", indexDe+1)
                 if indexDe != -1:
                     depeart = text2[indexDe+len("Departure:"):indexEndLineDe].strip()
@@ -532,40 +545,53 @@ for page in folders:
                 indexService = text2.find("From:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexService+1)
                 if indexDe != -1:
-                    indexEndLine = text2.find("\n", indexService+1)
-                    indexEndLine = text2.find("\n", indexService+1)
+                    indexEndLineTest = text2.find("\n", indexEndLine+1)
+                    indexEndLine = text2.find("\n", indexEndLineTest+1)
+                    if text2[indexEndLineTest:indexEndLine].isspace():
+                        indexEndLine = indexEndLineTest
                 from1 = text2[indexService+len("From:"):indexEndLine].strip()
 
-                indexService = text2.find("Pickup Time:", indexEndLine+1)
-                indexEndLine = text2.find("hrs", indexService+1)
-                pickuptime = text2[indexService+len("Pickup Time:"):indexEndLine-1].strip()
+                indexService = text2.find("Pickup Time:", indexEndLine+1,indexEndLine+100)
+                if indexService != -1:
+                    indexEndLine = text2.find("hrs", indexService+1)
+                    pickuptime = text2[indexService+len("Pickup Time:"):indexEndLine-1].strip()
+                else:
+                    pickuptime=""
 
-                indexService = text2.find("Pickup Point:", indexEndLine+1)
-                indexEndLineP = text2.find("\n", indexService+1)
-                pickuppoint = text2[indexService+len("Pickup Point:"):indexEndLineP].strip()
+                indexService = text2.find("Pickup Point:", indexEndLine+1,indexEndLine+100)
+                if indexService != -1:
+                    indexEndLineP = text2.find("\n", indexService+1)
+                    pickuppoint = text2[indexService+len("Pickup Point:"):indexEndLineP].strip()
+                else:
+                    pickuppoint =""
 
                 indexService = text2.find("To: ", indexEndLineP+1)
                 indexEndLine = text2.find("\n", indexService+1)
                 if indexArr != -1:
-                    indexEndLine = text2.find("\n", indexService+1)
-                    indexEndLine = text2.find("\n", indexService+1)
+                    indexEndLineTest = text2.find("\n", indexEndLine+1)
+                    indexEndLine = text2.find("\n", indexEndLineTest+1)
+                    if text2[indexEndLineTest:indexEndLine].isspace():
+                        indexEndLine = indexEndLineTest
                 to1 = text2[indexService+len("To: "):indexEndLine].strip()
 
                 indexService = text2.find("Transport:", indexEndLineP+1)
-                indexEndLine = text2.find("\n", indexService+1)
-                transport = text2[indexService+len("Transport:"):indexEndLine].strip()
+                indexEndLine1 = text2.find("\n", indexService+1)
+                transport = text2[indexService+len("Transport:"):indexEndLine1].strip()
 
-            elif ("MODIFICATION" in text2[indexType+1:indexType+100]):
+                if indexEndLine1 > indexEndLine:
+                    indexEndLine = indexEndLine1
+
+            elif (( indexType == -1 and typeDetail=="MODIFY") or "MODIFICATION" in text2[indexType+1:indexType+100]):
                 typeDetail="MODIFY"
 
-                indexArr= text2.find("Arrival:", indexEndLine+1,indexEndLine+100)
+                indexArr= text2.find("Arrival:", indexEndLine+1,indexEndLine+200)
                 indexEndLineArr = text2.find("\n", indexArr+1)
                 if indexArr != -1:
                     arrival = text2[indexArr+len("Arrival:"):indexEndLineArr].strip()
                 else:
                     arrival=""
 
-                indexDe= text2.find("Departure:", indexEndLine+1,indexEndLine+100)
+                indexDe= text2.find("Departure:", indexEndLine+1,indexEndLine+200)
                 indexEndLineDe = text2.find("\n", indexDe+1)
                 if indexDe != -1:
                     depeart = text2[indexDe+len("Departure:"):indexEndLineDe].strip()
@@ -605,33 +631,46 @@ for page in folders:
                 indexService = text2.find("From:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexService+1)
                 if indexDe != -1:
-                    indexEndLine = text2.find("\n", indexService+1)
-                    indexEndLine = text2.find("\n", indexService+1)
+                    indexEndLineTest = text2.find("\n", indexEndLine+1)
+                    indexEndLine = text2.find("\n", indexEndLineTest+1)
+                    if text2[indexEndLineTest:indexEndLine].isspace():
+                        indexEndLine = indexEndLineTest
                 from1 = text2[indexService+len("From:"):indexEndLine].strip()
 
-                indexService = text2.find("Pickup Time:", indexEndLine+1)
-                indexEndLine = text2.find("hrs", indexService+1)
-                pickuptime = text2[indexService+len("Pickup Time:"):indexEndLine-1].strip()
+                indexService = text2.find("Pickup Time:", indexEndLine+1,indexEndLine+100)
+                if indexService != -1:
+                    indexEndLine = text2.find("hrs", indexService+1)
+                    pickuptime = text2[indexService+len("Pickup Time:"):indexEndLine-1].strip()
+                else:
+                    pickuptime=""
 
-                indexService = text2.find("Pickup Point:", indexEndLine+1)
-                indexEndLineP = text2.find("\n", indexService+1)
-                pickuppoint = text2[indexService+len("Pickup Point:"):indexEndLineP].strip()
+                indexService = text2.find("Pickup Point:", indexEndLine+1,indexEndLine+100)
+                if indexService != -1:
+                    indexEndLineP = text2.find("\n", indexService+1)
+                    pickuppoint = text2[indexService+len("Pickup Point:"):indexEndLineP].strip()
+                else:
+                    pickuppoint = ""
 
                 indexService = text2.find("To: ", indexEndLineP+1)
                 indexEndLine = text2.find("\n", indexService+1)
                 if indexArr != -1:
-                    indexEndLine = text2.find("\n", indexService+1)
-                    indexEndLine = text2.find("\n", indexService+1)
+                    indexEndLineTest = text2.find("\n", indexEndLine+1)
+                    indexEndLine = text2.find("\n", indexEndLineTest+1)
+                    if text2[indexEndLineTest:indexEndLine].isspace():
+                        indexEndLine = indexEndLineTest
                 to1 = text2[indexService+len("To: "):indexEndLine].strip()
 
                 indexService = text2.find("Transport:", indexEndLineP+1)
-                indexEndLine = text2.find("\n", indexService+1)
-                transport = text2[indexService+len("Transport:"):indexEndLine].strip()
+                indexEndLine1 = text2.find("\n", indexService+1)
+                transport = text2[indexService+len("Transport:"):indexEndLine1].strip()
 
-                indexService = text2.find("Old booking:", indexEndLineP+1)
+                if indexEndLine1 > indexEndLine:
+                    indexEndLine = indexEndLine1
+
+                indexService = text2.find("Old booking:", indexEndLine+1)
                 indexEndLine = text2.find("Transport:", indexService+1)
-                indexEndLine = text2.find("To:", indexService+1)
-                indexEndLine = text2.find("\n", indexService+1)
+                indexEndLine = text2.find("To:", indexEndLine+1)
+                indexEndLine = text2.find("\n", indexEndLine+1)
                 oldBook = text2[indexService+len("Old booking:"):indexEndLine].strip()
 
             else:
@@ -670,7 +709,10 @@ for page in folders:
         sheet1.write(row,30,oldBook)
 
         startText = indexEndLine+1
-        #print(text2[startText:len(text2)])
+        
+        #print("********************")
+        #print(text2[startText:startText+400])
+        #print(row)
         row +=1
 
 wb.save(datetime.now().strftime('%Y%m%d_%H%M%S')+'_HT.xls') 
