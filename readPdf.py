@@ -168,6 +168,7 @@ for page in folders:
         transport=""
         to1=""
         oldBook = ""
+        loop = 0
         indexReference = text2.find("REFERENCE", startText,startText+300)
 
         if indexReference!=-1: #Page2
@@ -430,31 +431,45 @@ for page in folders:
                 else:
                     depeart = ""
 
-                indexBook = text2.find("Creation booking date:", indexEndLine+1)
-                if indexBook ==-1:
-                    break;
-                indexEndLine = text2.find("\n", indexBook+1)
-                bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
+                if indexArr ==-1 and indexDe == -1: #NotFound Arrival and Departure
+                    break
 
-                indexService = text2.find("SERVICE ID:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexService+1)
-                serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
+                loop=0
+                while True:
+                    indexBook = text2.find("Creation booking date:", indexEndLine+1,indexEndLine+100)
+                    if indexBook ==-1:
+                        loop -=1
+                        break
+                    indexEndLine = text2.find("\n", indexBook+1)
+                    bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
+                    sheet1.write(row+loop,4,bookDate)
 
-                indexStart = text2.find("Commercial description:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
-                
-                indexStart = text2.find("Serv.Type:", indexEndLine+1)
-                indexEndLine = text2.find("Vehicle:", indexStart+1)
-                serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
+                    indexService = text2.find("SERVICE ID:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexService+1)
+                    serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
+                    sheet1.write(row+loop,5,serviceId)
 
-                indexStart = text2.find("Vehicle:", indexEndLine-1)
-                indexEndLine = text2.find("Paxes:", indexStart+1)
-                venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
+                    indexStart = text2.find("Commercial description:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
+                    sheet1.write(row+loop,22,comDes)
+                    
+                    indexStart = text2.find("Serv.Type:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("Vehicle:", indexStart+1)
+                    serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
+                    sheet1.write(row+loop,23,serviceType)
 
-                indexStart = text2.find("Paxes:", indexEndLine-1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
+                    indexStart = text2.find("Vehicle:", indexEndLine-1,indexEndLine+100)
+                    indexEndLine = text2.find("Paxes:", indexStart+1)
+                    venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
+                    sheet1.write(row+loop,24,venhicle)
+
+                    indexStart = text2.find("Paxes:", indexEndLine-1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
+                    sheet1.write(row+loop,13,pax)
+
+                    loop +=1
 
                 indexService = text2.find("From:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexService+1)
@@ -512,35 +527,50 @@ for page in folders:
                 else:
                     depeart=""
 
-                indexBook = text2.find("Creation booking date:", indexEndLine+1)
-                if indexBook ==-1:
-                    break;
-                indexEndLine = text2.find("\n", indexBook+1)
-                bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
+                if indexArr ==-1 and indexDe == -1: #NotFound Arrival and Departure
+                    break
 
-                indexCancel = text2.find("Cancellation booking date:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexCancel+1)
-                CancelDate = text2[indexCancel+len("Cancellation booking date:"):indexEndLine].strip()
+                loop=0
+                while True:
+                    indexBook = text2.find("Creation booking date:", indexEndLine+1,indexEndLine+100)
+                    if indexBook ==-1:
+                        loop -=1
+                        break;
+                    indexEndLine = text2.find("\n", indexBook+1)
+                    bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
+                    sheet1.write(row+loop,4,bookDate)
 
-                indexService = text2.find("SERVICE ID:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexService+1)
-                serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
+                    indexCancel = text2.find("Cancellation booking date:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexCancel+1)
+                    CancelDate = text2[indexCancel+len("Cancellation booking date:"):indexEndLine].strip()
+                    sheet1.write(row+loop,17,CancelDate)
 
-                indexStart = text2.find("Commercial description:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
-                
-                indexStart = text2.find("Serv.Type:", indexEndLine+1)
-                indexEndLine = text2.find("Vehicle:", indexStart+1)
-                serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
+                    indexService = text2.find("SERVICE ID:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexService+1)
+                    serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
+                    sheet1.write(row+loop,5,serviceId)
 
-                indexStart = text2.find("Vehicle:", indexEndLine-1)
-                indexEndLine = text2.find("Paxes:", indexStart+1)
-                venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
+                    indexStart = text2.find("Commercial description:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
+                    sheet1.write(row+loop,22,comDes)
+                    
+                    indexStart = text2.find("Serv.Type:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("Vehicle:", indexStart+1)
+                    serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
+                    sheet1.write(row+loop,23,serviceType)
 
-                indexStart = text2.find("Paxes:", indexEndLine-1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
+                    indexStart = text2.find("Vehicle:", indexEndLine-1,indexEndLine+100)
+                    indexEndLine = text2.find("Paxes:", indexStart+1)
+                    venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
+                    sheet1.write(row+loop,24,venhicle)
+
+                    indexStart = text2.find("Paxes:", indexEndLine-1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
+                    sheet1.write(row+loop,13,pax)
+
+                    loop +=1
 
                 indexService = text2.find("From:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexService+1)
@@ -598,35 +628,51 @@ for page in folders:
                 else:
                     depeart=""
 
-                indexBook = text2.find("Creation booking date:", indexEndLine+1)
-                if indexBook ==-1:
-                    break;
-                indexEndLine = text2.find("\n", indexBook+1)
-                bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
+                if indexArr ==-1 and indexDe == -1: #NotFound Arrival and Departure
+                    break
 
-                indexCancel = text2.find("Modification booking date:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexCancel+1)
-                ModiDate = text2[indexCancel+len("Modification booking date:"):indexEndLine].strip()
+                loop=0
+                while True:
+                    indexBook = text2.find("Creation booking date:", indexEndLine+1,indexEndLine+100)
+                    if indexBook ==-1:
+                        loop -=1
+                        break;
+                    indexEndLine = text2.find("\n", indexBook+1)
+                    bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
+                    sheet1.write(row+loop,4,bookDate)
 
-                indexService = text2.find("SERVICE ID:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexService+1)
-                serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
+                    indexCancel = text2.find("Modification booking date:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexCancel+1)
+                    ModiDate = text2[indexCancel+len("Modification booking date:"):indexEndLine].strip()
+                    sheet1.write(row+loop,18,ModiDate)
 
-                indexStart = text2.find("Commercial description:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
-                
-                indexStart = text2.find("Serv.Type:", indexEndLine+1)
-                indexEndLine = text2.find("Vehicle:", indexStart+1)
-                serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
+                    indexService = text2.find("SERVICE ID:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexService+1)
+                    serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
+                    sheet1.write(row+loop,5,serviceId)
 
-                indexStart = text2.find("Vehicle:", indexEndLine-1)
-                indexEndLine = text2.find("Paxes:", indexStart+1)
-                venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
+                    indexStart = text2.find("Commercial description:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
+                    sheet1.write(row+loop,22,comDes)
+                    
+                    indexStart = text2.find("Serv.Type:", indexEndLine+1,indexEndLine+100)
+                    indexEndLine = text2.find("Vehicle:", indexStart+1)
+                    serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
+                    sheet1.write(row+loop,23,serviceType)
 
-                indexStart = text2.find("Paxes:", indexEndLine-1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
+                    indexStart = text2.find("Vehicle:", indexEndLine-1,indexEndLine+100)
+                    indexEndLine = text2.find("Paxes:", indexStart+1)
+                    venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
+                    sheet1.write(row+loop,24,venhicle)
+
+                    indexStart = text2.find("Paxes:", indexEndLine-1,indexEndLine+100)
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
+                    sheet1.write(row+loop,13,pax)
+
+                    loop+=1
+
 
                 indexService = text2.find("From:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexService+1)
@@ -672,47 +718,51 @@ for page in folders:
                 indexEndLine = text2.find("To:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexEndLine+1)
                 oldBook = text2[indexService+len("Old booking:"):indexEndLine].strip()
-
             else:
                 break
 
-        sheet1.write(row, 0, referenceNum)
-        sheet1.write(row, 1, referenceName) 
-        sheet1.write(row,2,AgencyReference)
-        sheet1.write(row,3,typeDetail)
-        sheet1.write(row,4,bookDate)
-        sheet1.write(row,5,serviceId)
-        sheet1.write(row,6,contract)
-        sheet1.write(row,7,serviceDate)
-        sheet1.write(row,8,service)
-        sheet1.write(row,9,modality)
-        sheet1.write(row,10,serviceDes)
-        sheet1.write(row,11,modalDes)
-        sheet1.write(row,12,rate)
-        sheet1.write(row,13,pax)
-        sheet1.write(row,14,cust)
-        sheet1.write(row,15,remark)
-        sheet1.write(row,16,hotel)
-        sheet1.write(row,17,CancelDate)
-        sheet1.write(row,18,ModiDate)
-        sheet1.write(row,19,ClientMobile)
-        sheet1.write(row,20,arrival)
-        sheet1.write(row,21,depeart)
-        sheet1.write(row,22,comDes)
-        sheet1.write(row,23,serviceType)
-        sheet1.write(row,24,venhicle)
-        sheet1.write(row,25,from1)
-        sheet1.write(row,26,pickuptime)
-        sheet1.write(row,27,pickuppoint)
-        sheet1.write(row,28,transport)
-        sheet1.write(row,29,to1)
-        sheet1.write(row,30,oldBook)
+        
+        if mode != "withname" :
+            sheet1.write(row,4,bookDate)
+            sheet1.write(row,5,serviceId)
+            sheet1.write(row,13,pax)
+            sheet1.write(row,22,comDes)
+            sheet1.write(row,23,serviceType)
+            sheet1.write(row,24,venhicle)
+            sheet1.write(row,18,ModiDate)
+            sheet1.write(row,17,CancelDate)
+
+        saveloop = loop
+        while loop >-1:
+            sheet1.write(row+loop,0,referenceNum)
+            sheet1.write(row+loop,1,referenceName) 
+            sheet1.write(row+loop,2,AgencyReference)
+            sheet1.write(row+loop,3,typeDetail)
+            sheet1.write(row+loop,6,contract)
+            sheet1.write(row+loop,7,serviceDate)
+            sheet1.write(row+loop,8,service)
+            sheet1.write(row+loop,9,modality)
+            sheet1.write(row+loop,10,serviceDes)
+            sheet1.write(row+loop,11,modalDes)
+            sheet1.write(row+loop,12,rate)
+            sheet1.write(row+loop,14,cust)
+            sheet1.write(row+loop,15,remark)
+            sheet1.write(row+loop,16,hotel)
+            sheet1.write(row+loop,19,ClientMobile)
+            sheet1.write(row+loop,20,arrival)
+            sheet1.write(row+loop,21,depeart)
+            sheet1.write(row+loop,25,from1)
+            sheet1.write(row+loop,26,pickuptime)
+            sheet1.write(row+loop,27,pickuppoint)
+            sheet1.write(row+loop,28,transport)
+            sheet1.write(row+loop,29,to1)
+            sheet1.write(row+loop,30,oldBook)
+            loop -=1
 
         startText = indexEndLine+1
-        
         #print("********************")
         #print(text2[startText:startText+400])
         #print(row)
-        row +=1
+        row +=1+saveloop
 
 wb.save(datetime.now().strftime('%Y%m%d_%H%M%S')+'_HT.xls') 
