@@ -6,12 +6,16 @@ from pdfminer.layout import LAParams
 from pdfminer.pdfpage import PDFPage
 from io import BytesIO as StringIO
 from cStringIO import StringIO as StringIO2
-import xlwt 
-from xlwt import Workbook 
 import PyPDF2 
 
-path = os.path.join(os.path.dirname(os.path.realpath(__file__)),'pdfFile')
+import openpyxl
+from openpyxl import Workbook 
+from openpyxl import load_workbook
+wb = load_workbook('DatabaseHB.xlsm',keep_vba=True)
+ws = wb['raw']
 
+path = os.path.join(os.path.dirname(os.path.realpath(__file__)),'pdfFile')
+#fileDb = os.path.join(os.path.dirname(os.path.realpath(__file__)),'DatabaseHB.xlsm')
 folders = []
 
 # r=root, d=directories, f = files
@@ -46,11 +50,11 @@ def convert_pdf_to_txt(path):
 
     startT = 0
     endT = 0
-    while(text.find("HOTELBEDS (THAILAND) LIMITED", endT)!=-1):
-        startT = text.find("HOTELBEDS (THAILAND) LIMITED", startT)
+    while(text.find("HOTELBEDS PTE", endT)!=-1):
+        startT = text.find("HOTELBEDS PTE", startT)
         endT = text.find("Please indicate our reference number on each of your invoices.\n--------------------------------------------------------------------------------", startT)
         if endT == -1:
-            endT = text.find("Please provide the following services:\n \n--------------------------------------------------------------------------------", startT)
+            endT = text.find("Please provide the following services:\n", startT)
         text = text[0:startT].strip()+"\n"+text[endT+len("Please provide the following services:\n \n--------------------------------------------------------------------------------"):len(text)].strip()
     text = text.strip()
 
@@ -64,69 +68,77 @@ def convert_pdf_to_txt(path):
     return text
         
 # Workbook is created 
-wb = Workbook() 
-row = 1
+#wb = Workbook() 
+row = 3
+
 # add_sheet is used to create sheet. 
-sheet1 = wb.add_sheet('Sheet1') 
-sheet1.col(0).width = 15*256
-sheet1.col(1).width = 30*256
-sheet1.col(2).width = 20*256
-sheet1.col(3).width = 10*256
-sheet1.col(4).width = 20*256
-sheet1.col(5).width = 15*256
-sheet1.col(6).width = 15*256
-sheet1.col(7).width = 15*256
-sheet1.col(8).width = 15*256
-sheet1.col(9).width = 15*256
-sheet1.col(10).width = 27*256
-sheet1.col(11).width = 20*256
-sheet1.col(12).width = 15*256
-sheet1.col(13).width = 40*256
-sheet1.col(14).width = 38*256
-sheet1.col(15).width = 70*256
-sheet1.col(16).width = 25*256
-sheet1.col(17).width = 20*256
-sheet1.col(18).width = 20*256
-sheet1.col(19).width = 25*256
-sheet1.col(21).width = 30*256
-sheet1.col(22).width = 100*256
-sheet1.col(24).width = 25*256
-sheet1.col(25).width = 40*256
-sheet1.col(26).width = 25*256
-sheet1.col(28).width = 50*256
-sheet1.col(29).width = 40*256
-sheet1.col(30).width = 60*256
-sheet1.write(0, 0, "refNo")
-sheet1.write(0, 1, "CustomerName")
-sheet1.write(0, 2, "Agent refNo")
-sheet1.write(0,3,"Type")
-sheet1.write(0,4,"Booking Date")
-sheet1.write(0,5,"Service Id")
-sheet1.write(0,6,"Contract")
-sheet1.write(0,7,"Service Date")
-sheet1.write(0,8,"Service")
-sheet1.write(0,9,"Modality")
-sheet1.write(0,10,"Service Description")
-sheet1.write(0,11,"Modality Description")
-sheet1.write(0,12,"Rate")
-sheet1.write(0,13,"PAX")
-sheet1.write(0,14,"Customer Detail")
-sheet1.write(0,15,"REMARK")
-sheet1.write(0,16,"Hotel")
-sheet1.write(0,17,"Cancel BookingDate")
-sheet1.write(0,18,"Modification BookingDate")
-sheet1.write(0,19,"Client Mobile")
-sheet1.write(0,20,"Arrival")
-sheet1.write(0,21,"Departure")
-sheet1.write(0,22,"Commercial description")
-sheet1.write(0,23,"Serv.Type")
-sheet1.write(0,24,"Vehicle")
-sheet1.write(0,25,"From")
-sheet1.write(0,26,"PickUp Time")
-sheet1.write(0,27,"PickUp point")
-sheet1.write(0,28,"Transport")
-sheet1.write(0,29,"To")
-sheet1.write(0,30,"OldBooking (Modification)")
+#sheet1 = wb.add_sheet('Sheet1')
+
+ws.column_dimensions['A'].width = 15
+ws.column_dimensions['A'].fill = openpyxl.styles.fills.PatternFill(patternType='solid',fgColor=openpyxl.styles.colors.Color(rgb='FFFF00'))
+ws.column_dimensions['B'].width = 30
+ws.column_dimensions['C'].width = 20
+ws.column_dimensions['D'].width = 10
+ws.column_dimensions['E'].width = 20
+ws.column_dimensions['F'].width = 15
+ws.column_dimensions['F'].fill = openpyxl.styles.fills.PatternFill(patternType='solid',fgColor=openpyxl.styles.colors.Color(rgb='FFFF00'))
+ws.column_dimensions['G'].width = 15
+ws.column_dimensions['H'].width = 15
+ws.column_dimensions['I'].width = 15
+ws.column_dimensions['J'].width = 15
+ws.column_dimensions['K'].width = 32
+ws.column_dimensions['L'].width = 22
+ws.column_dimensions['M'].width = 15
+ws.column_dimensions['N'].width = 40
+ws.column_dimensions['O'].width = 42
+ws.column_dimensions['P'].width = 70
+ws.column_dimensions['Q'].width = 25
+ws.column_dimensions['R'].width = 20
+ws.column_dimensions['S'].width = 20
+ws.column_dimensions['T'].width = 25
+ws.column_dimensions['U'].width = 12
+ws.column_dimensions['V'].width = 12
+ws.column_dimensions['W'].width = 26
+ws.column_dimensions['X'].width = 10
+ws.column_dimensions['Y'].width = 25
+ws.column_dimensions['Z'].width = 50
+ws.column_dimensions['AA'].width = 40
+ws.column_dimensions['AB'].width = 20
+ws.column_dimensions['AC'].width = 40
+ws.column_dimensions['AD'].width = 40
+ws.column_dimensions['AE'].width = 40
+ws.row_dimensions[2].fill = openpyxl.styles.fills.PatternFill(patternType='solid',fgColor=openpyxl.styles.colors.Color(rgb='C0C0C0'))
+ws.cell(2, 1, "refNo")
+ws.cell(2, 2, "CustomerName")
+ws.cell(2, 3, "Agent refNo")
+ws.cell(2, 4,"Type")
+ws.cell(2, 5,"Booking Date")
+ws.cell(2, 6,"Service Id")
+ws.cell(2, 7,"Contract")
+ws.cell(2, 8,"Service Date")
+ws.cell(2, 9,"Service")
+ws.cell(2,10,"Modality")
+ws.cell(2,11,"Service Description")
+ws.cell(2,12,"Modality Description")
+ws.cell(2,13,"Rate")
+ws.cell(2,14,"PAX")
+ws.cell(2,15,"Customer Detail")
+ws.cell(2,16,"REMARK")
+ws.cell(2,17,"Hotel")
+ws.cell(2,18,"Cancel BookingDate")
+ws.cell(2,19,"Modification BookingDate")
+ws.cell(2,20,"Client Mobile")
+ws.cell(2,21,"Arrival")
+ws.cell(2,22,"Departure")
+ws.cell(2,23,"Commercial description")
+ws.cell(2,24,"Serv.Type")
+ws.cell(2,25,"Vehicle")
+ws.cell(2,26,"From")
+ws.cell(2,27,"PickUp Time")
+ws.cell(2,28,"PickUp point")
+ws.cell(2,29,"Transport")
+ws.cell(2,30,"To")
+ws.cell(2,31,"OldBooking (Modification)")
 
 for page in folders:
     text2 = convert_pdf_to_txt(page)
@@ -170,13 +182,16 @@ for page in folders:
         oldBook = ""
         loop = 0
         indexReference = text2.find("REFERENCE", startText,startText+300)
-
         if indexReference!=-1: #Page2
-            indexReferenceNum = text2.find("\n", indexReference+9)
-            indexEndLine = text2.find("\n", indexReferenceNum+1)
+            indexLastMinute = text2.find("LAST MINUTE", indexReference+9 , indexReference+50 )
+            if indexLastMinute!=-1:
+                indexReferenceNum = text2.find("\n", indexLastMinute+12)
+                indexEndLine = text2.find("\n", indexReferenceNum+1)
+            else:
+                indexReferenceNum = text2.find("\n", indexReference+9)
+                indexEndLine = text2.find("\n", indexReferenceNum+3)
             reference = text2[indexReferenceNum+1:indexEndLine].strip().split()
             referenceNum = reference[0]
-
         if(reference[1]!= "Name:"):
             mode = "noname"
             referenceName = reference[1]
@@ -226,10 +241,10 @@ for page in folders:
                 modality = text2[indexStart+len("Modality:"):indexEndLine].strip()
 
                 indexStart = text2.find("Service Description:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
+                indexEndLine = text2.find("Modality Description:", indexEndLine+1)
                 serviceDes = text2[indexStart+len("Service Description:"):indexEndLine].strip()
 
-                indexStart = text2.find("Modality Description:", indexEndLine+1)
+                indexStart = indexEndLine
                 indexEndLine = text2.find("\n", indexStart+1)
                 modalDes = text2[indexStart+len("Modality Description:"):indexEndLine].strip()
 
@@ -292,10 +307,10 @@ for page in folders:
                 modality = text2[indexStart+len("Modality:"):indexEndLine].strip()
 
                 indexStart = text2.find("Service Description:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
+                indexEndLine = text2.find("Modality Description:", indexEndLine+1)
                 serviceDes = text2[indexStart+len("Service Description:"):indexEndLine].strip()
 
-                indexStart = text2.find("Modality Description:", indexEndLine+1)
+                indexStart = indexEndLine
                 indexEndLine = text2.find("\n", indexStart+1)
                 modalDes = text2[indexStart+len("Modality Description:"):indexEndLine].strip()
 
@@ -358,10 +373,10 @@ for page in folders:
                 modality = text2[indexStart+len("Modality:"):indexEndLine].strip()
 
                 indexStart = text2.find("Service Description:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
+                indexEndLine = text2.find("Modality Description:", indexEndLine+1)
                 serviceDes = text2[indexStart+len("Service Description:"):indexEndLine].strip()
 
-                indexStart = text2.find("Modality Description:", indexEndLine+1)
+                indexStart = indexEndLine
                 indexEndLine = text2.find("\n", indexStart+1)
                 modalDes = text2[indexStart+len("Modality Description:"):indexEndLine].strip()
 
@@ -442,32 +457,32 @@ for page in folders:
                         break
                     indexEndLine = text2.find("\n", indexBook+1)
                     bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
-                    sheet1.write(row+loop,4,bookDate)
+                    ws.cell(row+loop,5,bookDate)
 
                     indexService = text2.find("SERVICE ID:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexService+1)
                     serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
-                    sheet1.write(row+loop,5,serviceId)
+                    ws.cell(row+loop,6,serviceId)
 
                     indexStart = text2.find("Commercial description:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexStart+1)
                     comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
-                    sheet1.write(row+loop,22,comDes)
+                    ws.cell(row+loop,23,comDes)
                     
                     indexStart = text2.find("Serv.Type:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("Vehicle:", indexStart+1)
                     serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
-                    sheet1.write(row+loop,23,serviceType)
+                    ws.cell(row+loop,24,serviceType)
 
                     indexStart = text2.find("Vehicle:", indexEndLine-1,indexEndLine+100)
                     indexEndLine = text2.find("Paxes:", indexStart+1)
                     venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
-                    sheet1.write(row+loop,24,venhicle)
+                    ws.cell(row+loop,25,venhicle)
 
                     indexStart = text2.find("Paxes:", indexEndLine-1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexStart+1)
                     pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
-                    sheet1.write(row+loop,13,pax)
+                    ws.cell(row+loop,14,pax)
 
                     loop +=1
 
@@ -538,37 +553,37 @@ for page in folders:
                         break;
                     indexEndLine = text2.find("\n", indexBook+1)
                     bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
-                    sheet1.write(row+loop,4,bookDate)
+                    ws.cell(row+loop,5,bookDate)
 
                     indexCancel = text2.find("Cancellation booking date:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexCancel+1)
                     CancelDate = text2[indexCancel+len("Cancellation booking date:"):indexEndLine].strip()
-                    sheet1.write(row+loop,17,CancelDate)
+                    ws.cell(row+loop,18,CancelDate)
 
                     indexService = text2.find("SERVICE ID:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexService+1)
                     serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
-                    sheet1.write(row+loop,5,serviceId)
+                    ws.cell(row+loop,6,serviceId)
 
                     indexStart = text2.find("Commercial description:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexStart+1)
                     comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
-                    sheet1.write(row+loop,22,comDes)
+                    ws.cell(row+loop,23,comDes)
                     
                     indexStart = text2.find("Serv.Type:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("Vehicle:", indexStart+1)
                     serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
-                    sheet1.write(row+loop,23,serviceType)
+                    ws.cell(row+loop,24,serviceType)
 
                     indexStart = text2.find("Vehicle:", indexEndLine-1,indexEndLine+100)
                     indexEndLine = text2.find("Paxes:", indexStart+1)
                     venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
-                    sheet1.write(row+loop,24,venhicle)
+                    ws.cell(row+loop,25,venhicle)
 
                     indexStart = text2.find("Paxes:", indexEndLine-1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexStart+1)
                     pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
-                    sheet1.write(row+loop,13,pax)
+                    ws.cell(row+loop,14,pax)
 
                     loop +=1
 
@@ -639,37 +654,37 @@ for page in folders:
                         break;
                     indexEndLine = text2.find("\n", indexBook+1)
                     bookDate = text2[indexBook+len("Creation booking date:"):indexEndLine].strip()
-                    sheet1.write(row+loop,4,bookDate)
+                    ws.cell(row+loop,5,bookDate)
 
                     indexCancel = text2.find("Modification booking date:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexCancel+1)
                     ModiDate = text2[indexCancel+len("Modification booking date:"):indexEndLine].strip()
-                    sheet1.write(row+loop,18,ModiDate)
+                    ws.cell(row+loop,19,ModiDate)
 
                     indexService = text2.find("SERVICE ID:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexService+1)
                     serviceId = text2[indexService+len("SERVICE ID:"):indexEndLine].strip()
-                    sheet1.write(row+loop,5,serviceId)
+                    ws.cell(row+loop,6,serviceId)
 
                     indexStart = text2.find("Commercial description:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexStart+1)
                     comDes = text2[indexStart+len("Commercial description:"):indexEndLine].strip()
-                    sheet1.write(row+loop,22,comDes)
+                    ws.cell(row+loop,23,comDes)
                     
                     indexStart = text2.find("Serv.Type:", indexEndLine+1,indexEndLine+100)
                     indexEndLine = text2.find("Vehicle:", indexStart+1)
                     serviceType = text2[indexStart+len("Serv.Type:"):indexEndLine-1].strip()
-                    sheet1.write(row+loop,23,serviceType)
+                    ws.cell(row+loop,24,serviceType)
 
                     indexStart = text2.find("Vehicle:", indexEndLine-1,indexEndLine+100)
                     indexEndLine = text2.find("Paxes:", indexStart+1)
                     venhicle = text2[indexStart+len("Vehicle:"):indexEndLine-1].strip()
-                    sheet1.write(row+loop,24,venhicle)
+                    ws.cell(row+loop,25,venhicle)
 
                     indexStart = text2.find("Paxes:", indexEndLine-1,indexEndLine+100)
                     indexEndLine = text2.find("\n", indexStart+1)
                     pax = text2[indexStart+len("Paxes:"):indexEndLine].strip()
-                    sheet1.write(row+loop,13,pax)
+                    ws.cell(row+loop,14,pax)
 
                     loop+=1
 
@@ -723,40 +738,40 @@ for page in folders:
 
         
         if mode != "withname" :
-            sheet1.write(row,4,bookDate)
-            sheet1.write(row,5,serviceId)
-            sheet1.write(row,13,pax)
-            sheet1.write(row,22,comDes)
-            sheet1.write(row,23,serviceType)
-            sheet1.write(row,24,venhicle)
-            sheet1.write(row,18,ModiDate)
-            sheet1.write(row,17,CancelDate)
+            ws.cell(row,5,bookDate)
+            ws.cell(row,6,serviceId)
+            ws.cell(row,14,pax)
+            ws.cell(row,23,comDes)
+            ws.cell(row,24,serviceType)
+            ws.cell(row,25,venhicle)
+            ws.cell(row,19,ModiDate)
+            ws.cell(row,18,CancelDate)
 
         saveloop = loop
         while loop >-1:
-            sheet1.write(row+loop,0,referenceNum)
-            sheet1.write(row+loop,1,referenceName) 
-            sheet1.write(row+loop,2,AgencyReference)
-            sheet1.write(row+loop,3,typeDetail)
-            sheet1.write(row+loop,6,contract)
-            sheet1.write(row+loop,7,serviceDate)
-            sheet1.write(row+loop,8,service)
-            sheet1.write(row+loop,9,modality)
-            sheet1.write(row+loop,10,serviceDes)
-            sheet1.write(row+loop,11,modalDes)
-            sheet1.write(row+loop,12,rate)
-            sheet1.write(row+loop,14,cust)
-            sheet1.write(row+loop,15,remark)
-            sheet1.write(row+loop,16,hotel)
-            sheet1.write(row+loop,19,ClientMobile)
-            sheet1.write(row+loop,20,arrival)
-            sheet1.write(row+loop,21,depeart)
-            sheet1.write(row+loop,25,from1)
-            sheet1.write(row+loop,26,pickuptime)
-            sheet1.write(row+loop,27,pickuppoint)
-            sheet1.write(row+loop,28,transport)
-            sheet1.write(row+loop,29,to1)
-            sheet1.write(row+loop,30,oldBook)
+            ws.cell(row+loop,1,referenceNum)
+            ws.cell(row+loop,2,referenceName) 
+            ws.cell(row+loop,3,AgencyReference)
+            ws.cell(row+loop,4,typeDetail)
+            ws.cell(row+loop,7,contract)
+            ws.cell(row+loop,8,serviceDate)
+            ws.cell(row+loop,9,service)
+            ws.cell(row+loop,10,modality)
+            ws.cell(row+loop,11,serviceDes)
+            ws.cell(row+loop,12,modalDes)
+            ws.cell(row+loop,13,rate)
+            ws.cell(row+loop,15,cust)
+            ws.cell(row+loop,16,remark)
+            ws.cell(row+loop,17,hotel)
+            ws.cell(row+loop,20,ClientMobile)
+            ws.cell(row+loop,21,arrival)
+            ws.cell(row+loop,22,depeart)
+            ws.cell(row+loop,26,from1)
+            ws.cell(row+loop,27,pickuptime)
+            ws.cell(row+loop,28,pickuppoint)
+            ws.cell(row+loop,29,transport)
+            ws.cell(row+loop,30,to1)
+            ws.cell(row+loop,31,oldBook)
             loop -=1
 
         startText = indexEndLine+1
@@ -764,5 +779,4 @@ for page in folders:
         #print(text2[startText:startText+400])
         #print(row)
         row +=1+saveloop
-
-wb.save(datetime.now().strftime('%Y%m%d_%H%M%S')+'_HT.xls') 
+wb.save('DatabaseHB.xlsm') 
