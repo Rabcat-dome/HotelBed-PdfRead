@@ -153,6 +153,8 @@ for page in folders:
     mode=""
 
     while startText <= allText:
+        #print(startText)
+        #print(allText)
         bookDate=""
         serviceId=""
         contract=""
@@ -185,14 +187,19 @@ for page in folders:
         if indexReference!=-1: #Page2
             indexLastMinute = text2.find("LAST MINUTE", indexReference+9 , indexReference+50 )
             if indexLastMinute!=-1:
-                indexReferenceNum = text2.find("\n", indexLastMinute+12)
+                indexReferenceNum = text2.find("\n", indexLastMinute+11)
+                #print(indexReferenceNum)
                 indexEndLine = text2.find("\n", indexReferenceNum+1)
+                #print(indexEndLine)
             else:
                 indexReferenceNum = text2.find("\n", indexReference+9)
                 indexEndLine = text2.find("\n", indexReferenceNum+3)
+                #print(indexEndLine)
             reference = text2[indexReferenceNum+1:indexEndLine].strip().split()
+            #print(reference)
             referenceNum = reference[0]
         if(reference[1]!= "Name:"):
+            #print(reference[1])
             mode = "noname"
             referenceName = reference[1]
             for x in range(len(reference)-2):
@@ -202,13 +209,19 @@ for page in folders:
 
             if indexReference!=-1: #Page2
                 indexAgencyRef = text2.find("Agency Reference:", indexEndLine)
-                indexEndLine = text2.find("\n", indexAgencyRef+1)
-                AgencyReference = text2[indexAgencyRef+17:indexEndLine].strip()
+                if indexAgencyRef !=-1:
+                    c = text2.find("\n", indexAgencyRef+1)
+                    AgencyReference = text2[indexAgencyRef+17:indexEndLine].strip()
+                    #print(indexEndLine)
+                else:
+                    AgencyReference = ""
+                    #print(indexEndLine)
 
             indexType = text2.find("---", indexEndLine+1,indexEndLine+100)
 
             if indexType != -1:
                 indexEndLine = text2.find("\n", indexType+1)
+                #print(indexEndLine)
             typeDetail=""
 
             if(indexType == -1 or "NEW" in text2[indexType+1:indexType+100]):
@@ -291,12 +304,18 @@ for page in folders:
                 serviceId = text2[indexService+len("SERVICE ID"):indexEndLine].strip()
 
                 indexStart = text2.find("Contract:", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                contract = text2[indexStart+len("Contract:"):indexEndLine].strip()
+                if(indexStart!=-1):
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    contract = text2[indexStart+len("Contract:"):indexEndLine].strip()
+                else:
+                    contract=""
 
                 indexStart = text2.find("Service Date", indexEndLine+1)
-                indexEndLine = text2.find("\n", indexStart+1)
-                serviceDate = text2[indexStart+len("Service Date"):indexEndLine].strip()
+                if(indexStart!=-1):
+                    indexEndLine = text2.find("\n", indexStart+1)
+                    serviceDate = text2[indexStart+len("Service Date"):indexEndLine].strip()
+                else:
+                    serviceDate = ""
 
                 indexStart = text2.find("Service:", indexEndLine+1)
                 indexEndLine = text2.find("Modality:", indexStart+1)
@@ -321,6 +340,7 @@ for page in folders:
                 indexStart = text2.find("PASSENGERS:", indexEndLine+1)
                 indexEndLine = text2.find("\n", indexStart+1)
                 pax = text2[indexStart+len("PASSENGERS:"):indexEndLine].strip()
+                #print(indexEndLine)
 
                 indexStart = indexEndLine
                 indexEndLine = text2.find("REMARKS:", indexStart-1)
@@ -775,6 +795,7 @@ for page in folders:
             loop -=1
 
         startText = indexEndLine+1
+        #print(indexEndLine)
         #print("********************")
         #print(text2[startText:startText+400])
         #print(row)
